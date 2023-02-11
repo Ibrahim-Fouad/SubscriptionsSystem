@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SubscriptionsSystem.Application.DTOs.Auth;
 using SubscriptionsSystem.Application.DTOs.Users;
 using SubscriptionsSystem.Domain.Entities;
 
@@ -11,5 +12,7 @@ public class UserMappingProfile : Profile
         CreateMap<User, UserDto>()
             .ForCtorParam(nameof(UserDto.RegistrationDate),
                 dest => dest.MapFrom(u => u.CreatedAtUtc));
+
+        CreateMap<User, UserWithTokenDto>();
     }
 }

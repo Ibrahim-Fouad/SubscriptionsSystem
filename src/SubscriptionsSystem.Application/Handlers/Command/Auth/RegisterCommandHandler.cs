@@ -11,7 +11,7 @@ using SubscriptionsSystem.Domain.Entities;
 
 namespace SubscriptionsSystem.Application.Handlers.Command.Auth;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterDto, UserDto>
+internal class RegisterCommandHandler : IRequestHandler<RegisterDto, UserDto>
 {
     private readonly IRepository<User> _userRepository;
     private readonly IUnitOfWork _unitOfWork;

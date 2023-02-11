@@ -1,4 +1,5 @@
 using SubscriptionsSystem.API.Extensions;
+using SubscriptionsSystem.API.Middlewares;
 using SubscriptionsSystem.Application.Extensions;
 using SubscriptionsSystem.Infrastructure.Data;
 using SubscriptionsSystem.Infrastructure.Extensions;
@@ -9,9 +10,9 @@ builder.Services.AddSqlServer<AppDbContext>(
     optionsBuilder => optionsBuilder.EnableSensitiveDataLogging(builder.Environment.IsDevelopment()));
 // Add services to the container.
 builder.Services
-    .AddApiServices()
-    .AddApplicationServices()
-    .AddInfrastructureServices();
+    .AddApiServices(builder.Configuration)
+    .AddApplicationServices(builder.Configuration)
+    .AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -30,4 +30,18 @@ public class AuthController : BaseApiController
     {
         return Ok(await _sender.Send(registerDto, cancellationToken));
     }
+
+    /// <summary>
+    /// Login to system with with credentials.
+    /// </summary>
+    /// <param name="loginDto">Username and password of user.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Login information with token.</returns>
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(UserWithTokenDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
+    {
+        return Ok(await _sender.Send(loginDto, cancellationToken));
+    }
 }
