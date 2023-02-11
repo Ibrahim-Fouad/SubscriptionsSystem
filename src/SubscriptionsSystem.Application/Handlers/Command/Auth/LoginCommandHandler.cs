@@ -6,14 +6,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SubscriptionsSystem.Application.Abstractions;
 using SubscriptionsSystem.Application.DTOs.Auth;
-using SubscriptionsSystem.Application.Exceptions.Users;
 using SubscriptionsSystem.Application.Options;
 using SubscriptionsSystem.Application.Services;
 using SubscriptionsSystem.Domain.Entities;
+using SubscriptionsSystem.Domain.Enums;
+using SubscriptionsSystem.Domain.Shared;
 
 namespace SubscriptionsSystem.Application.Handlers.Command.Auth;
 
-internal class LoginCommandHandler : IRequestHandler<LoginDto, UserWithTokenDto>
+internal class LoginCommandHandler : IRequestHandler<LoginDto, OperationResult<UserWithTokenDto>>
 {
     private readonly IRepository<User> _userRepository;
     private readonly IMapper _mapper;
@@ -29,7 +30,7 @@ internal class LoginCommandHandler : IRequestHandler<LoginDto, UserWithTokenDto>
         _jwtOptions = jwtOptions.Value;
     }
 
-    public async Task<UserWithTokenDto> Handle(LoginDto request, CancellationToken cancellationToken)
+    public async Task<OperationResult<UserWithTokenDto>> Handle(LoginDto request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Checking if username '{request.Username}' is exists.", request.Username);
         var user = await _userRepository.Query
@@ -39,16 +40,17 @@ internal class LoginCommandHandler : IRequestHandler<LoginDto, UserWithTokenDto>
         if (user is null)
         {
             _logger.LogInformation("Username '{request.Username}' is not found.", request.Username);
-            throw new InvalidUsernameOrPasswordException();
+            return DomainErrors.InvalidUsernameOrPassword;
         }
 
         if (!Sha512PasswordService.ValidatePassword(request.Password, user.PasswordHash, user.PasswordSalt))
         {
             _logger.LogInformation("Wrong password for user '{request.Username}'", request.Username);
-            throw new InvalidUsernameOrPasswordException();
+            return DomainErrors.InvalidUsernameOrPassword;
         }
 
-        _logger.LogInformation("Logging in success for user '{request.Username}', generating JWT token...", request.Username);
+        _logger.LogInformation("Logging in success for user '{request.Username}', generating JWT token...",
+            request.Username);
         var userWithToken = _mapper.Map<UserWithTokenDto>(user);
         userWithToken.Token = GenerateToken(user);
         return userWithToken;

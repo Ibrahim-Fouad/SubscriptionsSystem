@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SubscriptionsSystem.Application.DTOs.Auth;
 using SubscriptionsSystem.Application.DTOs.Users;
-using SubscriptionsSystem.Application.Exceptions.Users;
 
 namespace SubscriptionsSystem.API.Controllers;
 
