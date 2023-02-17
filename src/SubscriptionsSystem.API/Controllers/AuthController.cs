@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using System.Reflection.Metadata;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SubscriptionsSystem.Application.DTOs.Auth;
 using SubscriptionsSystem.Application.DTOs.Users;
+using SubscriptionsSystem.Domain.Shared;
 
 namespace SubscriptionsSystem.API.Controllers;
 
@@ -24,10 +26,10 @@ public class AuthController : BaseApiController
     [HttpPost("register")]
     [Produces(typeof(UserDto))]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(registerDto, cancellationToken));
+        return HandleResult(await _sender.Send(registerDto, cancellationToken));
     }
 
     /// <summary>
@@ -38,9 +40,9 @@ public class AuthController : BaseApiController
     /// <returns>Login information with token.</returns>
     [HttpPost("login")]
     [ProducesResponseType(typeof(UserWithTokenDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(loginDto, cancellationToken));
+        return HandleResult(await _sender.Send(loginDto, cancellationToken));
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SubscriptionsSystem.Application.Abstractions;
@@ -16,12 +15,12 @@ namespace SubscriptionsSystem.Application.Handlers.Command.Auth;
 
 internal class LoginCommandHandler : IRequestHandler<LoginDto, OperationResult<UserWithTokenDto>>
 {
-    private readonly IRepository<User> _userRepository;
+    private readonly IUsersRepository _userRepository;
     private readonly IMapper _mapper;
     private readonly JwtOptions _jwtOptions;
     private readonly ILogger<LoginCommandHandler> _logger;
 
-    public LoginCommandHandler(IRepository<User> userRepository, IMapper mapper, IOptions<JwtOptions> jwtOptions,
+    public LoginCommandHandler(IUsersRepository userRepository, IMapper mapper, IOptions<JwtOptions> jwtOptions,
         ILogger<LoginCommandHandler> logger)
     {
         _userRepository = userRepository;
@@ -33,9 +32,8 @@ internal class LoginCommandHandler : IRequestHandler<LoginDto, OperationResult<U
     public async Task<OperationResult<UserWithTokenDto>> Handle(LoginDto request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Checking if username '{request.Username}' is exists.", request.Username);
-        var user = await _userRepository.Query
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Username == request.Username, cancellationToken);
+        var user = await _userRepository
+            .GetUserAsync(u => u.Username == request.Username, cancellationToken);
 
         if (user is null)
         {

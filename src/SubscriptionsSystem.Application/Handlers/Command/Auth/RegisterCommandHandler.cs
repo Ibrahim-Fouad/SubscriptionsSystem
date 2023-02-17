@@ -14,12 +14,12 @@ namespace SubscriptionsSystem.Application.Handlers.Command.Auth;
 
 internal class RegisterCommandHandler : IRequestHandler<RegisterDto, OperationResult<UserDto>>
 {
-    private readonly IRepository<User> _userRepository;
+    private readonly IUsersRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<RegisterCommandHandler> _logger;
 
-    public RegisterCommandHandler(IRepository<User> userRepository, IUnitOfWork unitOfWork, IMapper mapper,
+    public RegisterCommandHandler(IUsersRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper,
         ILogger<RegisterCommandHandler> logger)
     {
         _userRepository = userRepository;
@@ -31,7 +31,7 @@ internal class RegisterCommandHandler : IRequestHandler<RegisterDto, OperationRe
     public async Task<OperationResult<UserDto>> Handle(RegisterDto request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Checking for username duplication");
-        if (await _userRepository.Query.AnyAsync(u => u.Username == request.Username, cancellationToken))
+        if (await _userRepository.AnyAsync(u => u.Username == request.Username, cancellationToken))
         {
             _logger.LogInformation("Username '{Username}' you have provided is already exists.", request.Username);
             return DomainErrors.UsernameIsAlreadyExists;

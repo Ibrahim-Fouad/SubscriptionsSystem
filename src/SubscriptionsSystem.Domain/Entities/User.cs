@@ -1,6 +1,6 @@
 ﻿namespace SubscriptionsSystem.Domain.Entities;
 
-public class User : Entity
+public class User : AggregateRoot
 {
     public string Username { get; private set; }
     public string PasswordHash { get; private set; }

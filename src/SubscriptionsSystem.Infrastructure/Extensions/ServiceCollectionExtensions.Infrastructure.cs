@@ -10,8 +10,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
         services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUsersRepository, UsersRepository>();
         return services;
     }
 }
