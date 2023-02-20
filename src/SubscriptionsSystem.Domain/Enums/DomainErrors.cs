@@ -3,5 +3,7 @@
 public enum DomainErrors
 {
     InvalidUsernameOrPassword = 1,
-    UsernameIsAlreadyExists
+    UsernameIsAlreadyExists,
+    ProductNameIsAlreadyExists,
+    ProductIsNotFound
 }

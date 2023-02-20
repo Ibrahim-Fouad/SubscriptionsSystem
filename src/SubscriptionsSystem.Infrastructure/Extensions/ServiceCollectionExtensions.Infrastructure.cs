@@ -12,6 +12,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IUsersRepository, UsersRepository>();
+        services.AddTransient<IProductsRepository, ProductsRepository>();
         return services;
     }
 }

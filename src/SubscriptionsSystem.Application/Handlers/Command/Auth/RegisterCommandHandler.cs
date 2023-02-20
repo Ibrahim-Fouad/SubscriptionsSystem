@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SubscriptionsSystem.Application.Abstractions;
 using SubscriptionsSystem.Application.DTOs.Auth;

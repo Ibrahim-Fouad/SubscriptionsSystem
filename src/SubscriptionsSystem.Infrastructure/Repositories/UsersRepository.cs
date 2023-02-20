@@ -6,11 +6,11 @@ using SubscriptionsSystem.Infrastructure.Data;
 
 namespace SubscriptionsSystem.Infrastructure.Repositories;
 
-public class UsersRepository : IUsersRepository
+public class UsersRepository : Repository<User>, IUsersRepository
 {
     private readonly AppDbContext _dbContext;
 
-    public UsersRepository(AppDbContext dbContext)
+    public UsersRepository(AppDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
@@ -21,11 +21,4 @@ public class UsersRepository : IUsersRepository
     public Task<User?> GetUserAsync(Expression<Func<User, bool>> expression,
         CancellationToken cancellationToken = default) =>
         _dbContext.Set<User>().FirstOrDefaultAsync(expression, cancellationToken);
-
-    public Task<bool>
-        AnyAsync(Expression<Func<User, bool>> expression, CancellationToken cancellationToken = default) =>
-        _dbContext.Set<User>().AnyAsync(expression, cancellationToken);
-
-    public void Add(User entity)
-        => _dbContext.Add(entity);
 }

@@ -2,9 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using SubscriptionsSystem.Application.Options;
-using SubscriptionsSystem.Application.Profiles;
+using SubscriptionsSystem.Application.Configurations;
 
 namespace SubscriptionsSystem.Application.Extensions;
 
@@ -14,7 +12,7 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
+        services.AddAutoMapper(AutoMapperConfigurations.Assemblies);
         return services;
     }
 }
