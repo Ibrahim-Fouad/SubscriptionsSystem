@@ -7,11 +7,11 @@ namespace SubscriptionsSystem.API.Controllers;
 
 public class ProductsController : BaseApiController
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public ProductsController(IMediator mediator)
+    public ProductsController(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     /// <summary>
@@ -26,7 +26,22 @@ public class ProductsController : BaseApiController
     public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto,
         CancellationToken cancellationToken)
     {
-        return HandleResult(await _mediator.Send(createProductDto, cancellationToken));
+        return HandleResult(await _sender.Send(createProductDto, cancellationToken));
+    }
+
+    /// <summary>
+    /// Update product.
+    /// </summary>
+    /// <param name="updateProductDto"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto,
+        CancellationToken cancellationToken)
+    {
+        return HandleResult(await _sender.Send(updateProductDto, cancellationToken));
     }
 
     /// <summary>
@@ -42,6 +57,6 @@ public class ProductsController : BaseApiController
         CancellationToken cancellationToken)
     {
         var request = new GetProductByIdDto(productId);
-        return HandleResult(await _mediator.Send(request, cancellationToken));
+        return HandleResult(await _sender.Send(request, cancellationToken));
     }
 }
