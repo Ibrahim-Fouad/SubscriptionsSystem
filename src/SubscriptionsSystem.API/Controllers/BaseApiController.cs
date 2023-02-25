@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SubscriptionsSystem.Domain.Shared;
 
 namespace SubscriptionsSystem.API.Controllers;
@@ -9,11 +10,12 @@ public class BaseApiController : ControllerBase
 {
     protected IActionResult HandleResult<T>(OperationResult<T> result)
     {
-        if (result.IsSuccess)
-        {
-            return Ok(result.Data);
-        }
+        if (!result.IsSuccess) 
+            return BadRequest(result.Error);
+        
+        if (result.Data is Unit)
+            return Ok();
 
-        return BadRequest(result.Error);
+        return Ok(result.Data);
     }
 }

@@ -52,11 +52,27 @@ public class ProductsController : BaseApiController
     /// <returns></returns>
     [HttpGet("{productId:int}")]
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetProductById(int productId,
         CancellationToken cancellationToken)
     {
         var request = new GetProductByIdDto(productId);
+        return HandleResult(await _sender.Send(request, cancellationToken));
+    }
+
+    /// <summary>
+    /// Get product by id
+    /// </summary>
+    /// <param name="productId">Id of product.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpDelete("{productId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RemoveProductById(int productId,
+        CancellationToken cancellationToken)
+    {
+        var request = new RemoveProductByIdDto(productId);
         return HandleResult(await _sender.Send(request, cancellationToken));
     }
 }

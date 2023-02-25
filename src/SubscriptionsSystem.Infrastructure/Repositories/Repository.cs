@@ -6,8 +6,6 @@ using SubscriptionsSystem.Infrastructure.Data;
 
 namespace SubscriptionsSystem.Infrastructure.Repositories;
 
-
-
 public abstract class Repository<T> : IRepository<T> where T : AggregateRoot
 {
     private readonly AppDbContext _dbContext;
@@ -17,13 +15,12 @@ public abstract class Repository<T> : IRepository<T> where T : AggregateRoot
         _dbContext = dbContext;
     }
 
-    public Task<bool> AnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
-    {
-        return _dbContext.Set<T>().AnyAsync(expression, cancellationToken);
-    }
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default) 
+        => _dbContext.Set<T>().AnyAsync(expression, cancellationToken);
 
-    public void Add(T entity)
-    {
-        _dbContext.Add(entity);
-    }
+    public void Add(T entity) 
+        => _dbContext.Add(entity);
+
+    public void Remove(T entity) 
+        => _dbContext.Remove(entity);
 }
